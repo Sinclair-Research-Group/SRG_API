@@ -1,0 +1,33 @@
+{
+  "name": "srg_api",
+  "version": "1.0.0",
+  "description": "SRG",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanareyna/SRG_API.git"
+  },
+  "author": "Alana Reyna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alanareyna/SRG_API/issues"
+  },
+  "homepage": "https://github.com/alanareyna/SRG_API#readme",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.1.4",
+    "jsonwebtoken": "^9.0.0",
+    "kcors": "^2.2.2",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.0",
+    "koa-json": "^2.0.2",
+    "koa-jwt": "^4.0.4",
+    "koa-router": "^12.0.0",
+    "koajs": "^1.0.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.22"
+  }
+}
