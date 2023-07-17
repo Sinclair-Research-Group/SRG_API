@@ -22,5 +22,5 @@ app.use(async (ctx, next) => {
 
 require('./app/Routers/DefaultRouter.js')(app);
 
-const httpsServer = require('./config/ssl/ssl.js')(app.callback());
-httpsServer.listen(process.env.APP_PORT, () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
+const httpServer = require('./config/ssl/ssl.js')(app.callback());
+httpServer.listen(process.env.APP_PORT, '0.0.0.0', () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
