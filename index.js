@@ -1,7 +1,6 @@
 const koa = require('koa');
 const app = new koa();
 const bodyParser = require('koa-bodyparser');
-const http = require('http');
 
 require('dotenv').config();
 app.use(bodyParser());

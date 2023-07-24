@@ -1,4 +1,4 @@
-const dbConnection = require('../../database/mySQLconnect');
+const dbConnection = require('../../database/mySQLconnect.js');
 //const parseSurveyResponse = require('../../config/parseSurveyResponse.js');
 require('dotenv').config();
 
