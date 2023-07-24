@@ -1,7 +1,7 @@
 const koa = require('koa');
 const app = new koa();
 const bodyParser = require('koa-bodyparser');
-const http = require('http');
+const https = require('https');
 
 require('dotenv').config();
 app.use(bodyParser());
@@ -22,5 +22,5 @@ app.use(async (ctx, next) => {
 
 require('./app/Routers/DefaultRouter.js')(app);
 
-const httpServer = require('./config/ssl/ssl.js')(app.callback());
-httpServer.listen(process.env.APP_PORT, '0.0.0.0', () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
+const httpsServer = require('./config/ssl/ssl.js')(app.callback());
+httpsServer.listen(process.env.APP_PORT, '0.0.0.0', () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
