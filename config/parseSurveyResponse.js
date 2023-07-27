@@ -4,13 +4,14 @@ class parseSurvey {
 
     async handleResponse(response) {
         const surveyDetails = await fetchSurveyDetails(response.survey_id);
+        console.log('SurveyDetails:', surveyDetails);
         const questionDetails = {
             multiple_choice: [],
             open_ended: []
         };
 
         for (let page of surveyDetails.pages) {
-            if (page.title === 'PL Session Quantitative Ratings (Strongly Agree to Strongly Disagree)') {
+            if (page.title === 'Professional Learning (PL) Session Quantitative Ratings (Strongly Agree to Strongly Disagree)') {
                 for (let question of page.questions) {
                     if (question.id && question.answers && question.answers.rows) {
                         for (let row of question.answers.rows) {
@@ -82,7 +83,7 @@ class parseSurvey {
                 candidate: response.candidate
             },
             session: {
-                session_name: response.session,
+                session_name: response.session_name,
                 survey: response.survey_id,
                 credentialProgram: response.credential_program_name
             },
