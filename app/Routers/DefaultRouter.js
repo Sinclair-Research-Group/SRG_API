@@ -17,7 +17,7 @@ router.get('/', function (ctx) {
     return ctx.body = 'Default Router: This is the SRG API!\n';
 });
 
-router.post('/test', ctx => {
+router.get('/test', ctx => {
     console.log('router.post(/test)');
     ctx.body = 'Hello World!';
 });
