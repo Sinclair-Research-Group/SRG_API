@@ -2,10 +2,10 @@ var mysql = require('mysql');
 
 var connection = mysql.createConnection({
         debug: false,
-        host: 'localhost',
-        port: 3306,
+        host: 'srg-database-mysql-do-user-14371739-0.b.db.ondigitalocean.com',
+        port: 25060,
         user: 'areyna',
-        password: '4Alanarox!',
+        password: 'AVNS_ACW8YxBDBzPrTOdT03T',
         database: 'srg'
 });
 
