@@ -1,13 +1,14 @@
 const koa = require('koa');
 const app = new koa();
 const bodyParser = require('koa-bodyparser');
-const https = require('https');
+const http = require('http');
 
 require('dotenv').config();
 app.use(bodyParser());
 require('./app/Middleware/CORS.js')(app);
 
 app.use(async (ctx, next) => {
+    console.log(`Received request: ${ctx.method} ${ctx.url}`);
     return next().catch((err) => {
         if(err.status === 401) {
             console.log('index.js: sending 401 to the client.');
@@ -22,5 +23,7 @@ app.use(async (ctx, next) => {
 
 require('./app/Routers/DefaultRouter.js')(app);
 
-const httpsServer = require('./config/ssl/ssl.js')(app.callback());
-httpsServer.listen(process.env.APP_PORT, () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
+app.listen(process.env.APP_PORT, '0.0.0.0', () => console.log(`Listening on HTTP port ${process.env.APP_PORT}`));
+
+// const httpsServer = require('./config/ssl/ssl.js')(app.callback());
+// httpsServer.listen(process.env.APP_PORT, '0.0.0.0', () => console.log(`Listening on HTTPS port ${process.env.APP_PORT}`));
