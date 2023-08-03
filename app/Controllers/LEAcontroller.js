@@ -2,38 +2,23 @@ const dbConnection = require('../../database/mySQLconnect.js');
 require('dotenv').config();
 
 class LEAController {
-    async addLEA(leaDetails) {
-        return new Promise((resolve, reject) => {
-            console.log('LEA controller leaDetails:', leaDetails);
+    async addLEA(leaDetails, connection) {
+        try {
             const LEA = leaDetails;
-
             let query = `INSERT IGNORE INTO LEA (name, lead_LEA)
                          VALUES (?, ?)`;
-            dbConnection.query(
-                {
-                    sql: query,
-                    values: [LEA.name, LEA.lead_LEA]
-                }, (err, res) => {
-                    if(err) {
-                        console.log('LEA controller error with first insert:', err);
-                        reject(err.sqlMessage ?? 'Error');
-                    }
-                    else {
-                        dbConnection.query('SELECT LAST_INSERT_ID() as ID', (err, results) => {
-                            if(err) {
-                                console.log('LEA controller error with second insert id:', err);
-                                reject(err.sqlMessage ?? 'Error');
-                            }
-                            const leaID = results[0]?.ID;
-                            console.log('LEA controller leaID:', leaID);
-                            resolve({
-                                ...res,
-                                leaID
-                            });
-                        });
-                    }
-                });
-        });
+            await connection.query(query, [LEA.name, LEA.lead_LEA]);
+            const [results] = await connection.query('SELECT LAST_INSERT_ID() as ID');
+            const leaID = results[0]?.ID;
+            console.log('LEA controller leaID: ', leaID);
+            return {
+                results,
+                leaID
+            };
+        } catch (err) {
+            console.log('LEA controller error: ', err);
+            throw err.sqlMessage ?? 'Error';
+        }
     }
 }
 

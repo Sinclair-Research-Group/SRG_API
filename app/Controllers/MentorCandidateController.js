@@ -1,28 +1,20 @@
-const dbConnection = require('../../database/mySQLconnect');
-// const parseSurveyResponse = require('../../config/parseSurveyResponse.js');
 require('dotenv').config();
 
 class MentorCandidateController {
-    async addMentorCandidate(MentorCandidateDetails) {
-        return new Promise((resolve, reject) => {
-            console.log('MentorCandidateController MentorCandidateDetails:', MentorCandidateDetails);
-            const MentorCandidate = MentorCandidateDetails;
-            let query = `INSERT IGNORE INTO Mentor_Candidate  
-                         VALUES (?, ?)`;
-            dbConnection.query(
-                {
-                    sql: query,
-                    values: [MentorCandidate.mentor, MentorCandidate.candidate]
-                }, (err, res) => {
-                    if(err) {
-                        console.log('MentorCandidateController error:', err);
-                        reject(err.sqlMessage ?? 'Error');
-                    }
-                    resolve({
-                        ...res
-                    });
-                });
-        });
+    async addMentorCandidate(MentorCandidateDetails, connection) {
+        // console.log('MentorCandidateController MentorCandidateDetails:', MentorCandidateDetails);
+        const MentorCandidate = MentorCandidateDetails;
+        let query = `INSERT IGNORE INTO Mentor_Candidate  
+                    VALUES (?, ?)`;
+        try {
+            const [res] = await connection.query(query, [MentorCandidate.mentor, MentorCandidate.candidate]);
+            return {
+                ...res
+            };
+        } catch (err) {
+            console.log('MentorCandidate error:', err);
+            throw err;
+        } 
     }
 }
 

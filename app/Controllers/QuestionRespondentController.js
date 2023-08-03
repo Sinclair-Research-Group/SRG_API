@@ -3,25 +3,20 @@ const dbConnection = require('../../database/mySQLconnect');
 require('dotenv').config();
 
 class QuestionRespondentController {
-    async addQuestionRespondent(QuestionRespondentDetails) {
-        return new Promise((resolve, reject) => {
-            const QuestionRespondent = QuestionRespondentDetails;
-            let query = `INSERT IGNORE INTO Question_Respondent 
-                         VALUES (?, ?, ?)`;
-            dbConnection.query(
-                {
-                    sql: query,
-                    values: [QuestionRespondent.question, QuestionRespondent.survey, QuestionRespondent.respondent]
-                }, (err, res) => {
-                    if(err) {
-                        console.log('QuestionRespondentController error:', err);
-                        reject(err.sqlMessage ?? 'Error');
-                    }
-                    resolve({
-                        ...res
-                    });
-                });
-        });
+    async addQuestionRespondent(QuestionRespondentDetails, connection) {
+        // console.log('Question controller questionDetails:', questionDetails);
+        const QuestionRespondent = QuestionRespondentDetails;
+        let query = `INSERT IGNORE INTO Question_Respondent 
+                        VALUES (?, ?, ?)`;
+        try {
+            const [res] = await connection.query(query, [QuestionRespondent.question, QuestionRespondent.survey, QuestionRespondent.respondent]);
+            return {
+                ...res
+            };
+        } catch (err) {
+            console.log('QuestionRespondent error:', err);
+            throw err;
+        }
     }
 }
 

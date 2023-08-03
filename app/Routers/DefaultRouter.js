@@ -36,6 +36,7 @@ const SessionController = new(require('../Controllers/SessionController.js'));
 const SurveyController = new(require('../Controllers/SurveyController.js'));
 const SurveyRespondentController = new(require('../Controllers/SurveyRespondentController.js'));
 const ZapierController = new(require('../Controllers/ZapierController.js'));
+const ExcelConversionController = new(require('../Controllers/ExcelConversionController.js'));
 
 // CREDENTIAL PROGRAM ROUTER
 const CredentialProgramRouter = require('koa-router')({
@@ -128,6 +129,15 @@ ZapierRouter.post('/addSurveyResponse', ZapierController.zapier, (err) => {
     console.log(`ZapierController::add survey response error: ${err}`)
 });
 
+// Excel converter router
+const ExcelRouter = require('koa-router')({
+    prefix: '/excel'
+});
+ExcelRouter.post('/convertExcel', ExcelConversionController.convertExcelToJSON, (err) => {
+    console.log(`ExcelConversionController::convertExcelToJSON error: ${err}`)
+});
+
+
 
 /**
  * Register all of the controllers into the default controller.
@@ -141,7 +151,8 @@ ZapierRouter.post('/addSurveyResponse', ZapierController.zapier, (err) => {
     RespondentRouter.routes(),
     SessionRouter.routes(),
     SurveyRouter.routes(),
-    ZapierRouter.routes()
+    ZapierRouter.routes(),
+    ExcelRouter.routes()
 );
 
 module.exports = function (app) {

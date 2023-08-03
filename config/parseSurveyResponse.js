@@ -4,7 +4,7 @@ class parseSurvey {
 
     async handleResponse(response) {
         const surveyDetails = await fetchSurveyDetails(response.survey_id);
-        console.log('SurveyDetails:', surveyDetails);
+        // console.log('SurveyDetails:', surveyDetails);
         const questionDetails = {
             multiple_choice: [],
             open_ended: []
@@ -39,7 +39,11 @@ class parseSurvey {
     }
     
     async parseSurveyResponse(response) {
-        const questionDetails = await this.handleResponse(response);
+        //const questionDetails = await this.handleResponse(response);
+        // const questionDetails = {
+        //     multiple_choice: [],
+        //     open_ended: []
+        // };
     
         const parsedData = {
             LEA: {
@@ -96,15 +100,18 @@ class parseSurvey {
         parsedData.questions = [];
         parsedData.question_respondent = [];
 
-        for (let mcQ of questionDetails.multiple_choice) {
-            let i = 1;
-
+        // for (let mcQ of questionDetails.multiple_choice) {
+        for (let i = 1; i <= 7; i++) {
+            // let i = 1;
+            // console.log('im in questionDetails.multiple_choice');
+            // console.log(`response for mcq_${i}:`);
+            // console.log(response[`mcq_${i}`]);
             // console.log('questionDetails.multiple_choice:', questionDetails.multiple_choice);
             // console.log('mcQ:', mcQ);
             // console.log('questionDetails.multiple_choice[mcQ].question_id:', mcQ.question_id);
 
-            const questionId = mcQ.question_id;
-            const questionDescription = mcQ.question_description;
+            // const questionId = mcQ.question_id;
+            // const questionDescription = mcQ.question_description;
             let Qweight;
 
             // console.log('questionId MC:', questionId);
@@ -133,8 +140,7 @@ class parseSurvey {
             }
 
             const question = {
-                ID: questionId,
-                description: questionDescription,
+                description: response[`mcq_${i}_d`],
                 survey: response.survey_id,
                 respondent: `${response.first_name}_${response.last_name}`,
                 response: response[`mcq_${i}`],
@@ -144,25 +150,27 @@ class parseSurvey {
             parsedData.questions.push(question);
 
             parsedData.question_respondent.push({
-                question: questionId,
+                question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d`]}`,
                 survey: response.survey_id,
                 respondent: `${response.first_name}_${response.last_name}`
             });
-            i++;
+            // i++;
         }
 
-        for (let oeQ of questionDetails.open_ended) {
-            let i = 1;
-            const questionId = oeQ.question_id;
-            const questionDescription = oeQ.question_description;
+        for (let i = 1; i <= 3; i++) {
+            // let i = 1;
+            // const questionId = oeQ.question_id;
+            // const questionDescription = oeQ.question_description;
+            // console.log('im in questionDetails.open_ended');
+            // console.log(`response for oeq_${i}:`);
+            // console.log(response[`oeq_${i}`]);
             const Qweight = 0;
 
             // console.log('questionId of open_ended:', questionId);
             // console.log('question_description of mult.choice:', questionDescription);
 
             const question = {
-                ID: questionId,
-                description: questionDescription,
+                description: response[`oeq_${i}_d`],
                 survey: response.survey_id,
                 respondent: `${response.first_name}_${response.last_name}`,
                 response: response[`oeq_${i}`],
@@ -172,12 +180,13 @@ class parseSurvey {
             parsedData.questions.push(question);
 
             parsedData.question_respondent.push({
-                question: questionId,
+                question: `${response[`oeq_${i}`]}_${response[`oeq_${i}_d`]}`,
                 survey: response.survey_id,
                 respondent: `${response.first_name}_${response.last_name}`
             });
-            i++;
         }
+        // console.log('end of parsed data, here it is: ', parsedData);
+        console.log('made it to the end of parsedData!');
         return parsedData;
     }
 }
