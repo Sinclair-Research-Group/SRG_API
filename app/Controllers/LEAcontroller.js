@@ -7,12 +7,21 @@ class LEAController {
             const LEA = leaDetails;
             let query = `INSERT IGNORE INTO LEA (name, lead_LEA)
                          VALUES (?, ?)`;
-            await connection.query(query, [LEA.name, LEA.lead_LEA]);
-            const [results] = await connection.query('SELECT LAST_INSERT_ID() as ID');
-            const leaID = results[0]?.ID;
+            let [rows] = await connection.query('SELECT ID FROM LEA WHERE name=? AND lead_LEA=?', [LEA.name, LEA.lead_LEA]);
+            let leaID;
+            if(rows.length === 0) {
+                // If no existing LEA is found, then insert the new LEA and get the ID.
+                let results = await connection.query(query, [LEA.name, LEA.lead_LEA]);
+                leaID = results[0].insertId; 
+                console.log('leaID in if ID doesnt exist yet:', leaID);
+            } else {
+                // If existing LEA is found, use the existing ID.
+                leaID = rows[0].ID;
+                console.log('Existing leaID found: ', leaID);
+            }
             console.log('LEA controller leaID: ', leaID);
             return {
-                results,
+                results: rows,
                 leaID
             };
         } catch (err) {

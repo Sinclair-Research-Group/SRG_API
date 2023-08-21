@@ -6,11 +6,11 @@ const { handleIncomingSurveyResponse } = require('../../config/handleIncomingSur
 class ExcelConversionController {
     async convertExcelToJSON(ctx) {
         try {
-            // console.log('im in the excel conversion controller!')
-            // excel_file = require('../../excel/Palmdale_edited.xlsx')
-            // // Load the Excel file
-            // let workbook = XLSX.readFile(excel_file);
-            let excel_file = path.join(__dirname, '../../excel/Palmdale_edited.xlsx');
+            // PALMDALE:
+            //let excel_file = path.join(__dirname, '../../excel/Palmdale_edited.xlsx');
+
+            // SANTA CLARA:
+            let excel_file = path.join(__dirname, '../../excel/Santa_ClaraUSD_TIP.xlsx');
             let workbook = XLSX.read(fs.readFileSync(excel_file), {type:'buffer'});
 
             // Get the first worksheet (or specify the name of the worksheet you want to convert)
@@ -19,12 +19,16 @@ class ExcelConversionController {
 
             // Convert the worksheet to JSON
             let jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-            //console.log('json data: ', jsonData);
+            // console.log('jsonData: ', jsonData);
 
             // Process the JSON data with your existing function
             for (let data of jsonData) {
-                await handleIncomingSurveyResponse(data);
+                try {
+                    // console.log('data of jsonData: ', data);
+                    await handleIncomingSurveyResponse(data);
+                } catch (error) {
+                    console.log('Error processing excel data: ', data, error);
+                } 
             }
 
             ctx.status = 200;

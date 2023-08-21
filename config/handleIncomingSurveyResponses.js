@@ -10,31 +10,16 @@ const questionRespondentController = new(require('../app/Controllers/QuestionRes
 const respondentEmailController = new(require('../app/Controllers/RespondentEmailController.js'))();
 const sessionController = new(require('../app/Controllers/SessionController.js'))();
 const surveyRespondentController = new(require('../app/Controllers/SurveyRespondentController.js'))();
+const teacherGroupController = new(require('../app/Controllers/TeacherGroupController.js'))();
 const pool = require('../database/mySQLconnect');
 const parseSurvey = require('../config/parseSurveyResponse.js');
 const parser = new parseSurvey();
 
 module.exports.handleIncomingSurveyResponse = async function handleIncomingSurveyResponse(response) {
     // parse the incoming survey response data
-    console.log('Once upon a time...');
     const parsedData = await parser.parseSurveyResponse(response);
-    // try {
-    //     const parsedData = await parser.parseSurveyResponse(response);
-    //     console.log('in the try');
-    // } catch (error) {
-    //     console.log('error with parseSurveyResponse');
-    // }
-    console.log('am i the drama?');
-    // console.log('db connection: ', dbConnection);
-    // get db connection
-        // console.log('im at the top of the db connection');
-        // if (err) {
-        //     console.log('shit. error connecting...');
-        //     console.log(err);
-        //     // throw err;
-        //     return;
-        // }
-        // console.log('db connected successfully!');
+    // console.log('parsedData: ', parsedData); 
+
     try {
         const connection = await pool.getConnection();
         // insert the data into the database
@@ -49,19 +34,16 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
                 console.error('error beginning transaction:', err);
                 return;
             }
-            // console.log('we literally just started...');
-
-            // console.log('handleIncomingSurveyResponse: parsedData.LEA: ', parsedData.LEA);
             
             // 1. insert LEA- this also returns and saves LEA id in lea 
             try {
                 const lea = await leaController.addLEA(parsedData.LEA, connection);
                 const leaID = lea.leaID;
-                // console.log('lea after leaController is called:', lea);
-                //console.log('leaID after leaController is called:', leaID);
+
                 // update parsedData LEA ID
                 parsedData.LEA.ID = leaID;
-                //console.log('LEA after ID is inserted:', parsedData.LEA);
+                console.log('parsedData.LEA.ID: ', parsedData.LEA.ID);
+
                 parsedData.credentialProgram.lea = leaID;
                 parsedData.survey.lea = leaID;
                 parsedData.lea_credential_program.lea = leaID;
@@ -84,19 +66,14 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
             } catch (error) {
                 console.log('HandleIncomingSurveyResponse: Error with Survey controller:', error);
             }
-            // console.log('how far we make it?');
 
             // 4. insert Respondent 
             try {
                 const respondent = await respondentController.addRespondent(parsedData.Respondent, connection);
-                console.log('respondent after calling controller: ', respondent);
-                //console.log('respondent:', respondent);
                 const respondentID = respondent.respondentID;
-                console.log('respondentID: ', respondentID);
-                //console.log('respondentID:', respondentID);
-                // update parsedData Respondent ID
+                console.log('respondent: ', respondent);
+                console.log('respondent first name: ', parsedData.Respondent.first_name);
                 parsedData.Respondent.ID = respondentID;
-                //console.log('ParsedData.Respondent after controller is called and ID is made:', parsedData.Respondent);
                 parsedData.respondent_email.respondent = respondentID;
                 parsedData.survey_respondent.respondent = respondentID; 
             } catch (error) {
@@ -105,23 +82,30 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
 
             // 5. insert Question
             for (let i = 0; i < parsedData.questions.length; i++) {
-                const questionData = parsedData.questions[i];
-                //console.log('HandleIncomingResponse Question-questionData:', questionData);
+                let questionData = parsedData.questions[i];
                 questionData.respondent = parsedData.Respondent.ID;
-                //console.log('HandleIncomingResponse Question-questionData AFTER respondent ID inserted:', questionData);
-                question = await questionController.addQuestion(questionData, connection);
-                console.log('question after calling question controller: ', question);
-                questionId = question.questionId;
-                console.log('questionId: ', questionId);
+                try {
+                    question = await questionController.addQuestion(questionData, connection);
+                } catch (error) {
+                    console.log('HandleIncomingSurveyResponse: Error with Question controller:', error);
+                }
+                let questionID = question.questionID;
+                console.log('questionID: ', questionID);
+
                 // For each question, create a QuestionRespondent entry
                 const questionRespondentData = {
-                    question: questionId,
+                    question: questionID,
                     survey: questionData.survey,
-                    respondent: parsedData.Respondent.ID,
+                    session: questionData.session,
+                    respondent: questionData.respondent,
                 };
-                // console.log('HandleIncomingSurveyResponse questionRespondentData:', questionRespondentData);
+                
                 // 6. insert Question Respondent
-                await questionRespondentController.addQuestionRespondent(questionRespondentData, connection);
+                try {
+                    await questionRespondentController.addQuestionRespondent(questionRespondentData, connection);
+                } catch (error) {
+                    console.log('HandleIncomingSurveyResponse: Error with Question_Respondent controller:', error);
+                }
             }
 
             // 7. insert LEA Credential Program
@@ -129,6 +113,7 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
                 lea: parsedData.LEA.ID,
                 credentialProgram: parsedData.credentialProgram.name
             };
+            console.log('leaCredentialProgramData: ', leaCredentialProgramData);
 
             try {
                 await leaCredentialProgramController.addLEACredentialProgram(leaCredentialProgramData, connection);
@@ -166,7 +151,19 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
             } catch (error) {
                 console.log('HandleIncomingSurveyResponse: Error with respondentEmail controller:', error);
             }
-            // console.log('how far we make it?');
+            
+            // insert respondent teacher group
+            for (let i = 0; i < parsedData.teacher_groups.length; i++) {
+                let teacherGroupData = parsedData.teacher_groups[i];
+                teacherGroupData.respondent = parsedData.Respondent.ID;
+                try {
+                    await teacherGroupController.addTeacherGroups(teacherGroupData, connection);
+                    console.log('HandleIncomingSurveyResponse: teacher group controller successful!');
+                } catch (error) {
+                    console.log('HandleIncomingSurveyResponse: Error with teacher group controller:', error);
+                }
+                console.log('Teacher group: ', parsedData.teacher_groups[i]);
+            }
 
             // 11. insert session
             try {
@@ -177,8 +174,9 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
             // console.log('how far we make it? not so much');
             // 12. insert survey respondent 
             const surveyRespondentData = {
-                survey: parsedData.survey.ID,
-                respondent: parsedData.Respondent.ID
+                survey: parsedData.survey_respondent.survey,
+                session: parsedData.survey_respondent.session,
+                respondent: parsedData.survey_respondent.respondent
             };
             // console.log('how far we make it?');
             try {
@@ -194,8 +192,7 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
         } catch (err) {
             // if any error occurred, rollback the transaction
             await connection.rollback();
-            console.log('error occured');
-            
+            console.log('error occured with DB transaction');
             // handle or re-throw the error
             console.error(err);
             throw err;
@@ -205,7 +202,7 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
         }
 
     } catch (err) {
-        console.log('error connecting...');
+        console.log('error connecting DB...');
         console.log(err);
         throw err;
     }

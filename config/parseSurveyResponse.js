@@ -38,13 +38,8 @@ class parseSurvey {
         return questionDetails; 
     }
     
-    async parseSurveyResponse(response) {
-        //const questionDetails = await this.handleResponse(response);
-        // const questionDetails = {
-        //     multiple_choice: [],
-        //     open_ended: []
-        // };
-    
+    async parseSurveyResponse(response) {   
+
         const parsedData = {
             LEA: {
                 name: response.lea_name,
@@ -66,7 +61,6 @@ class parseSurvey {
                 credential_program: response.credential_program_name,
                 first_name: response.first_name,
                 last_name: response.last_name,
-                teacher_group: response.teacher_group,
                 program_role: response.program_role,
                 years: response.years
             },
@@ -80,6 +74,7 @@ class parseSurvey {
             },
             survey_respondent: {
                 survey: response.survey_id,
+                session: response.session_name,
                 respondent: `${response.first_name}_${response.last_name}`
             },
             mentor_candidate: {
@@ -99,23 +94,26 @@ class parseSurvey {
     
         parsedData.questions = [];
         parsedData.question_respondent = [];
+        parsedData.teacher_groups = [];
 
-        // for (let mcQ of questionDetails.multiple_choice) {
+        for (let i = 1; i <= 14; i++) {
+            //console.log('parsesSurveyResponse: teacher group:', response[`teacher_group_${i}`] )
+            if (response[`teacher_group_${i}`] == null) { 
+                //console.log('parsesSurveyResponse: teacher group is null')
+                continue;
+            }
+            else {
+                //console.log('parsesSurveyResponse: teacher group is NOT null')
+                const teacher_group = {
+                    respondent: `${response.first_name}_${response.last_name}`,
+                    teacher_group: response[`teacher_group_${i}`]
+                }
+                parsedData.teacher_groups.push(teacher_group);
+            }
+        }
+
         for (let i = 1; i <= 7; i++) {
-            // let i = 1;
-            // console.log('im in questionDetails.multiple_choice');
-            // console.log(`response for mcq_${i}:`);
-            // console.log(response[`mcq_${i}`]);
-            // console.log('questionDetails.multiple_choice:', questionDetails.multiple_choice);
-            // console.log('mcQ:', mcQ);
-            // console.log('questionDetails.multiple_choice[mcQ].question_id:', mcQ.question_id);
-
-            // const questionId = mcQ.question_id;
-            // const questionDescription = mcQ.question_description;
             let Qweight;
-
-            // console.log('questionId MC:', questionId);
-            // console.log('question description MC:', questionDescription);
             
             if (response[`mcq_${i}`] === 'Strongly Agree') {
                 Qweight = 3;
@@ -142,6 +140,7 @@ class parseSurvey {
             const question = {
                 description: response[`mcq_${i}_d`],
                 survey: response.survey_id,
+                session: response.session_name,
                 respondent: `${response.first_name}_${response.last_name}`,
                 response: response[`mcq_${i}`],
                 weight: Qweight
@@ -152,26 +151,18 @@ class parseSurvey {
             parsedData.question_respondent.push({
                 question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d`]}`,
                 survey: response.survey_id,
+                session: response.session_name,
                 respondent: `${response.first_name}_${response.last_name}`
             });
-            // i++;
         }
 
         for (let i = 1; i <= 3; i++) {
-            // let i = 1;
-            // const questionId = oeQ.question_id;
-            // const questionDescription = oeQ.question_description;
-            // console.log('im in questionDetails.open_ended');
-            // console.log(`response for oeq_${i}:`);
-            // console.log(response[`oeq_${i}`]);
             const Qweight = 0;
-
-            // console.log('questionId of open_ended:', questionId);
-            // console.log('question_description of mult.choice:', questionDescription);
 
             const question = {
                 description: response[`oeq_${i}_d`],
                 survey: response.survey_id,
+                session: response.session_name,
                 respondent: `${response.first_name}_${response.last_name}`,
                 response: response[`oeq_${i}`],
                 weight: Qweight
@@ -182,10 +173,10 @@ class parseSurvey {
             parsedData.question_respondent.push({
                 question: `${response[`oeq_${i}`]}_${response[`oeq_${i}_d`]}`,
                 survey: response.survey_id,
+                session: response.session_name,
                 respondent: `${response.first_name}_${response.last_name}`
             });
         }
-        // console.log('end of parsed data, here it is: ', parsedData);
         console.log('made it to the end of parsedData!');
         return parsedData;
     }

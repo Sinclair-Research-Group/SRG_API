@@ -7,9 +7,9 @@ class QuestionRespondentController {
         // console.log('Question controller questionDetails:', questionDetails);
         const QuestionRespondent = QuestionRespondentDetails;
         let query = `INSERT IGNORE INTO Question_Respondent 
-                        VALUES (?, ?, ?)`;
+                        VALUES (?, ?, ?, ?)`;
         try {
-            const [res] = await connection.query(query, [QuestionRespondent.question, QuestionRespondent.survey, QuestionRespondent.respondent]);
+            const [res] = await connection.query(query, [QuestionRespondent.question, QuestionRespondent.survey, QuestionRespondent.session, QuestionRespondent.respondent]);
             return {
                 ...res
             };
