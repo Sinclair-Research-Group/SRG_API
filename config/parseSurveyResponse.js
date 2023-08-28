@@ -96,11 +96,11 @@ class parseSurvey {
         parsedData.question_respondent = [];
         parsedData.teacher_groups = [];
 
-        for (let i = 1; i <= 14; i++) {
+        for (let i = 1; i <= 15; i++) {
             //console.log('parsesSurveyResponse: teacher group:', response[`teacher_group_${i}`] )
             if (response[`teacher_group_${i}`] == null) { 
                 //console.log('parsesSurveyResponse: teacher group is null')
-                continue;
+                break;
             }
             else {
                 //console.log('parsesSurveyResponse: teacher group is NOT null')
@@ -112,9 +112,13 @@ class parseSurvey {
             }
         }
 
-        for (let i = 1; i <= 7; i++) {
+        for (let i = 1; i <= 10; i++) {
             let Qweight;
             
+            if (response[`mcq_${i}_d`] === NULL) {
+                break;
+            }
+
             if (response[`mcq_${i}`] === 'Strongly Agree') {
                 Qweight = 3;
             }
@@ -156,7 +160,11 @@ class parseSurvey {
             });
         }
 
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 10; i++) {
+            if (response[`oeq_${i}_d`] === NULL) {
+                break;
+            }
+
             const Qweight = 0;
 
             const question = {
