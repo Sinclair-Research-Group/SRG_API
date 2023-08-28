@@ -6,7 +6,7 @@ class LEACredentialProgramController {
     async addLEACredentialProgram(LEACredentialProgramDetails, connection) {
         // console.log('LEACredentialProgram controller LEACredentialProgramDetails:', LEACredentialProgramDetails);
         const LEACredentialProgram = LEACredentialProgramDetails;
-        let query = `INSERT INTO LEA_Credential_Program (lea, credential_program)
+        let query = `INSERT IGNORE INTO LEA_Credential_Program (lea, credential_program)
                      VALUES (?, ?)`;
         try {
             const [res] = await connection.query(query, [LEACredentialProgram.lea, LEACredentialProgram.credentialProgram]);

@@ -67,6 +67,13 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
                 console.log('HandleIncomingSurveyResponse: Error with Survey controller:', error);
             }
 
+            // 11. insert session
+            try {
+                await sessionController.addSession(parsedData.session, connection);
+            } catch (error) {
+                console.log('HandleIncomingSurveyResponse: Error with Session controller:', error);
+            }
+
             // 4. insert Respondent 
             try {
                 const respondent = await respondentController.addRespondent(parsedData.Respondent, connection);
@@ -163,13 +170,6 @@ module.exports.handleIncomingSurveyResponse = async function handleIncomingSurve
                     console.log('HandleIncomingSurveyResponse: Error with teacher group controller:', error);
                 }
                 console.log('Teacher group: ', parsedData.teacher_groups[i]);
-            }
-
-            // 11. insert session
-            try {
-                await sessionController.addSession(parsedData.session, connection);
-            } catch (error) {
-                console.log('HandleIncomingSurveyResponse: Error with Session controller:', error);
             }
             // console.log('how far we make it? not so much');
             // 12. insert survey respondent 
