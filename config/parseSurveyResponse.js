@@ -115,7 +115,7 @@ class parseSurvey {
         for (let i = 1; i <= 10; i++) {
             let Qweight;
             
-            if (response[`mcq_${i}_d`] === NULL) {
+            if (response[`mcq_${i}_d`] === null) {
                 break;
             }
 
@@ -161,7 +161,7 @@ class parseSurvey {
         }
 
         for (let i = 1; i <= 10; i++) {
-            if (response[`oeq_${i}_d`] === NULL) {
+            if (response[`oeq_${i}_d`] === null) {
                 break;
             }
 
