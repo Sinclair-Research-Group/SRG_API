@@ -8,9 +8,11 @@ class ExcelConversionController {
         try {
             // PALMDALE:
             //let excel_file = path.join(__dirname, '../../excel/Palmdale_edited.xlsx');
+            // TIP:
+            let excel_file = path.join(__dirname, '../../excel/Palmdale_TIP_edited.xlsx');
 
             // SANTA CLARA:
-            let excel_file = path.join(__dirname, '../../excel/Santa_ClaraUSD_TIP.xlsx');
+            //let excel_file = path.join(__dirname, '../../excel/Santa_ClaraUSD_TIP.xlsx');
             let workbook = XLSX.read(fs.readFileSync(excel_file), {type:'buffer'});
 
             // Get the first worksheet (or specify the name of the worksheet you want to convert)
