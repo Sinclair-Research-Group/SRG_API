@@ -114,31 +114,72 @@ class parseSurvey {
 
         for (let i = 1; i <= 10; i++) {
             let Qweight;
-            
-            if (response[`mcq_${i}_d`] == null) {
-                break;
-            }
 
-            if (response[`mcq_${i}`] === 'Strongly Agree') {
-                Qweight = 3;
+            if (response[weight_scale] == '4_1_scale'){
+                if (response[`mcq_${i}_d`] == null) {
+                    break;
+                }
+                if (response[`mcq_${i}`] === 'Strongly Agree') {
+                    Qweight = 4;
+                }
+                else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                    Qweight = 3;
+                }
+                else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                    Qweight = 2;
+                }
+                else if (response[`mcq_${i}`] === 'Do not Agree') {
+                    Qweight = 1;
+                }
+                else {
+                    Qweight = 0;
+                }
             }
-            else if (response[`mcq_${i}`] === 'Moderately Agree') {
-                Qweight = 2;
+            else if (response[weight_scale] == '3_3_scale'){
+                if (response[`mcq_${i}_d`] == null) {
+                    break;
+                }
+                if (response[`mcq_${i}`] === 'Strongly Agree') {
+                    Qweight = 3;
+                }
+                else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                    Qweight = 2;
+                }
+                else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                    Qweight = 1;
+                }
+                else if (response[`mcq_${i}`] === 'Strongly Disagree') {
+                    Qweight = -3;
+                }
+                else if (response[`mcq_${i}`] === 'Moderately Disagree') {
+                    Qweight = -2;
+                }
+                else if (response[`mcq_${i}`] === 'Slightly Disagree') {
+                    Qweight = -1;
+                }
+                else {
+                    Qweight = 0;
+                }
             }
-            else if (response[`mcq_${i}`] === 'Slightly Agree') {
-                Qweight = 1;
-            }
-            else if (response[`mcq_${i}`] === 'Strongly Disagree') {
-                Qweight = -3;
-            }
-            else if (response[`mcq_${i}`] === 'Moderately Disagree') {
-                Qweight = -2;
-            }
-            else if (response[`mcq_${i}`] === 'Slightly Disagree') {
-                Qweight = -1;
-            }
-            else {
-                Qweight = 0;
+            else if (response[weight_scale] == '2_2_scale'){
+                if (response[`mcq_${i}_d`] == null) {
+                    break;
+                }
+                if (response[`mcq_${i}`] === 'Strongly Agree') {
+                    Qweight = 2;
+                }
+                else if (response[`mcq_${i}`] === 'Agree') {
+                    Qweight = 1;
+                }
+                else if (response[`mcq_${i}`] === 'Disagree') {
+                    Qweight = -1;
+                }
+                else if (response[`mcq_${i}`] === 'Strongly Disagree') {
+                    Qweight = -2;
+                }
+                else {
+                    Qweight = 0;
+                }
             }
 
             const question = {
