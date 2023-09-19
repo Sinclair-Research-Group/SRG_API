@@ -37,6 +37,7 @@ const SurveyController = new(require('../Controllers/SurveyController.js'));
 const SurveyRespondentController = new(require('../Controllers/SurveyRespondentController.js'));
 const ZapierController = new(require('../Controllers/ZapierController.js'));
 const ExcelConversionController = new(require('../Controllers/ExcelConversionController.js'));
+const ExcelQuestionConversionController = new(require('../Controllers/ExcelQuestionController.js'));
 
 // CREDENTIAL PROGRAM ROUTER
 const CredentialProgramRouter = require('koa-router')({
@@ -136,6 +137,9 @@ const ExcelRouter = require('koa-router')({
 ExcelRouter.post('/convertExcel', ExcelConversionController.convertExcelToJSON, (err) => {
     console.log(`ExcelConversionController::convertExcelToJSON error: ${err}`)
 });
+ExcelRouter.post('/convertQuestionExcel', ExcelQuestionConversionController.convertExcelToJSON, (err) => {
+    console.log(`ExcelQuestionConversionController::converExcelToJSON error: ${err}`)
+})
 
 
 

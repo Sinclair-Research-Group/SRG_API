@@ -102,8 +102,21 @@ class parseSurvey {
                 //console.log('parsesSurveyResponse: teacher group is null')
                 break;
             }
+            else if (response[`teacher_group_${i}`].includes(",")) {
+                let original = response[`teacher_group_${i}`];
+                let result = original.split(", ");
+                for(j = 0; j <= result.length - 1; j++) {
+                    const teacher_group = {
+                        respondent: `${response.first_name}_${response.last_name}`,
+                        teacher_group: result[j]
+                    };
+                    console.log(teacher_group);
+                    parsedData.teacher_groups.push(teacher_group);
+                }
+            }
             else {
                 //console.log('parsesSurveyResponse: teacher group is NOT null')
+                
                 const teacher_group = {
                     respondent: `${response.first_name}_${response.last_name}`,
                     teacher_group: response[`teacher_group_${i}`]
