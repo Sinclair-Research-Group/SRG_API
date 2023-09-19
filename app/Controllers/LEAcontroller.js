@@ -7,7 +7,7 @@ class LEAController {
             const LEA = leaDetails;
             let query = `INSERT IGNORE INTO LEA (name, lead_LEA)
                          VALUES (?, ?)`;
-            let [rows] = await connection.query('SELECT ID FROM LEA WHERE name=? AND lead_LEA=?', [LEA.name, LEA.lead_LEA]);
+            let [rows] = await connection.query('SELECT ID FROM LEA WHERE TRIM(name) = ? AND TRIM(lead_LEA) = ?', [LEA.name, LEA.lead_LEA]);
             let leaID;
             if(rows.length === 0) {
                 // If no existing LEA is found, then insert the new LEA and get the ID.
