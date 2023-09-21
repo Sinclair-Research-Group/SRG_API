@@ -127,7 +127,7 @@ class parseSurvey {
 
         for (let i = 1; i <= 10; i++) {
             let Qweight;
-
+            console.log('weight scale: ', response.weight_scale);
             if (response.weight_scale == '4_1_scale'){
                 if (response[`mcq_${i}_d`] == null) {
                     break;
@@ -194,6 +194,7 @@ class parseSurvey {
                     Qweight = 0;
                 }
             }
+            console.log('weight after evaluation: ', Qweight);
 
             const question = {
                 description: response[`mcq_${i}_d`],
