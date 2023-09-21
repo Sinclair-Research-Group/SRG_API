@@ -105,7 +105,7 @@ class parseSurvey {
             else if (response[`teacher_group_${i}`].includes(",")) {
                 let original = response[`teacher_group_${i}`];
                 let result = original.split(", ");
-                for(j = 0; j <= result.length - 1; j++) {
+                for(let j = 0; j <= result.length - 1; j++) {
                     const teacher_group = {
                         respondent: `${response.first_name}_${response.last_name}`,
                         teacher_group: result[j]
@@ -128,7 +128,7 @@ class parseSurvey {
         for (let i = 1; i <= 10; i++) {
             let Qweight;
 
-            if (response[weight_scale] == '4_1_scale'){
+            if (response.weight_scale == '4_1_scale'){
                 if (response[`mcq_${i}_d`] == null) {
                     break;
                 }
@@ -148,7 +148,7 @@ class parseSurvey {
                     Qweight = 0;
                 }
             }
-            else if (response[weight_scale] == '3_3_scale'){
+            else if (response.weight_scale == '3_3_scale'){
                 if (response[`mcq_${i}_d`] == null) {
                     break;
                 }
@@ -174,7 +174,7 @@ class parseSurvey {
                     Qweight = 0;
                 }
             }
-            else if (response[weight_scale] == '2_2_scale'){
+            else if (response.weight_scale == '2_2_scale'){
                 if (response[`mcq_${i}_d`] == null) {
                     break;
                 }
