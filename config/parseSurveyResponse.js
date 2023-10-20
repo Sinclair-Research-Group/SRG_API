@@ -132,16 +132,16 @@ class parseSurvey {
                     if (response[`mcq_${i}_d_m`] == null) {
                         break;
                     }
-                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                    if (response[`mcq_${i}_m`] === 'Strongly Agree') {
                         Qweight = 4;
                     }
-                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                    else if (response[`mcq_${i}_m`] === 'Moderately Agree') {
                         Qweight = 3;
                     }
-                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                    else if (response[`mcq_${i}_m`] === 'Slightly Agree') {
                         Qweight = 2;
                     }
-                    else if (response[`mcq_${i}`] === 'Do not Agree') {
+                    else if (response[`mcq_${i}_m`] === 'Do not Agree') {
                         Qweight = 1;
                     }
                     else {
@@ -154,14 +154,14 @@ class parseSurvey {
                         survey: response.survey_id,
                         session: response.session_name,
                         respondent: `${response.first_name}_${response.last_name}`,
-                        response: response[`mcq_${i}`],
+                        response: response[`mcq_${i}_m`],
                         weight: Qweight
                     };
         
                     parsedData.questions.push(question);
         
                     parsedData.question_respondent.push({
-                        question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d_m`]}`,
+                        question: `${response[`mcq_${i}_m`]}_${response[`mcq_${i}_d_m`]}`,
                         survey: response.survey_id,
                         session: response.session_name,
                         respondent: `${response.first_name}_${response.last_name}`
@@ -171,16 +171,16 @@ class parseSurvey {
                     if (response[`mcq_${i}_d_c`] == null) {
                         break;
                     }
-                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                    if (response[`mcq_${i}_c`] === 'Strongly Agree') {
                         Qweight = 4;
                     }
-                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                    else if (response[`mcq_${i}_c`] === 'Moderately Agree') {
                         Qweight = 3;
                     }
-                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                    else if (response[`mcq_${i}_c`] === 'Slightly Agree') {
                         Qweight = 2;
                     }
-                    else if (response[`mcq_${i}`] === 'Do not Agree') {
+                    else if (response[`mcq_${i}_c`] === 'Do not Agree') {
                         Qweight = 1;
                     }
                     else {
@@ -193,14 +193,14 @@ class parseSurvey {
                         survey: response.survey_id,
                         session: response.session_name,
                         respondent: `${response.first_name}_${response.last_name}`,
-                        response: response[`mcq_${i}`],
+                        response: response[`mcq_${i}_c`],
                         weight: Qweight
                     };
         
                     parsedData.questions.push(question);
     
                     parsedData.question_respondent.push({
-                        question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d_c`]}`,
+                        question: `${response[`mcq_${i}_c`]}_${response[`mcq_${i}_d_c`]}`,
                         survey: response.survey_id,
                         session: response.session_name,
                         respondent: `${response.first_name}_${response.last_name}`
