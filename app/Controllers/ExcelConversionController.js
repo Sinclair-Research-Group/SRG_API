@@ -10,11 +10,18 @@ class ExcelConversionController {
             //let excel_file = path.join(__dirname, '../../excel/Palmdale_edited.xlsx');
             // TIP:
             // let excel_file = path.join(__dirname, '../../excel/Palmdale_TIP_edited.xlsx');
-
             // SANTA CLARA:
-            let excel_file = path.join(__dirname, '../../excel/Santa_ClaraUSD_TIP.xlsx');
-            let workbook = XLSX.read(fs.readFileSync(excel_file), {type:'buffer'});
+            //let excel_file = path.join(__dirname, '../../excel/Santa_ClaraUSD_TIP.xlsx');
+            // San Mateo COE (CASC):
+            // let excel_file = path.join(__dirname, '../../excel/SanMateoCOE_CASC.xlsx');
+            // Antioch USD:
+            //let excel_file = path.join(__dirname, '../../excel/Antioch_USD.xlsx');
+            // Santa Cruz COE:
+            //let excel_file = path.join(__dirname, '../../excel/Santa_Cruz.xlsx');
+            // Bellflower USD
+            let excel_file = path.join(__dirname, '../../excel/Bellflower_test.xlsx');
 
+            let workbook = XLSX.read(fs.readFileSync(excel_file), {type:'buffer'});
             // Get the first worksheet (or specify the name of the worksheet you want to convert)
             let worksheet = workbook.Sheets[workbook.SheetNames[0]];
             //console.log('worksheet:', worksheet);

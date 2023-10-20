@@ -127,92 +127,173 @@ class parseSurvey {
 
         for (let i = 1; i <= 10; i++) {
             let Qweight;
-            console.log('weight scale: ', response.weight_scale);
-            if (response.weight_scale == '4_1_scale'){
-                if (response[`mcq_${i}_d`] == null) {
-                    break;
+            if (response.lea_name == 'Bellflower USD') {
+                if (response.program_role.includes('Mentor')) {
+                    if (response[`mcq_${i}_d_m`] == null) {
+                        break;
+                    }
+                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                        Qweight = 4;
+                    }
+                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                        Qweight = 3;
+                    }
+                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                        Qweight = 2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Do not Agree') {
+                        Qweight = 1;
+                    }
+                    else {
+                        Qweight = 0;
+                    }
+                    console.log('weight after evaluation: ', Qweight);
+        
+                    const question = {
+                        description: response[`mcq_${i}_d_m`],
+                        survey: response.survey_id,
+                        session: response.session_name,
+                        respondent: `${response.first_name}_${response.last_name}`,
+                        response: response[`mcq_${i}`],
+                        weight: Qweight
+                    };
+        
+                    parsedData.questions.push(question);
+        
+                    parsedData.question_respondent.push({
+                        question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d_m`]}`,
+                        survey: response.survey_id,
+                        session: response.session_name,
+                        respondent: `${response.first_name}_${response.last_name}`
+                    });
                 }
-                if (response[`mcq_${i}`] === 'Strongly Agree') {
-                    Qweight = 4;
-                }
-                else if (response[`mcq_${i}`] === 'Moderately Agree') {
-                    Qweight = 3;
-                }
-                else if (response[`mcq_${i}`] === 'Slightly Agree') {
-                    Qweight = 2;
-                }
-                else if (response[`mcq_${i}`] === 'Do not Agree') {
-                    Qweight = 1;
-                }
-                else {
-                    Qweight = 0;
+                else if (response.program_role.includes('Candidate')) {
+                    if (response[`mcq_${i}_d_c`] == null) {
+                        break;
+                    }
+                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                        Qweight = 4;
+                    }
+                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                        Qweight = 3;
+                    }
+                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                        Qweight = 2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Do not Agree') {
+                        Qweight = 1;
+                    }
+                    else {
+                        Qweight = 0;
+                    }
+                    console.log('weight after evaluation: ', Qweight);
+
+                    const question = {
+                        description: response[`mcq_${i}_d_c`],
+                        survey: response.survey_id,
+                        session: response.session_name,
+                        respondent: `${response.first_name}_${response.last_name}`,
+                        response: response[`mcq_${i}`],
+                        weight: Qweight
+                    };
+        
+                    parsedData.questions.push(question);
+    
+                    parsedData.question_respondent.push({
+                        question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d_c`]}`,
+                        survey: response.survey_id,
+                        session: response.session_name,
+                        respondent: `${response.first_name}_${response.last_name}`
+                    });
                 }
             }
-            else if (response.weight_scale == '3_3_scale'){
-                if (response[`mcq_${i}_d`] == null) {
-                    break;
+            else {
+                if (response.weight_scale == '4_1_scale'){
+                    if (response[`mcq_${i}_d`] == null) {
+                        break;
+                    }
+                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                        Qweight = 4;
+                    }
+                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                        Qweight = 3;
+                    }
+                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                        Qweight = 2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Do not Agree') {
+                        Qweight = 1;
+                    }
+                    else {
+                        Qweight = 0;
+                    }
                 }
-                if (response[`mcq_${i}`] === 'Strongly Agree') {
-                    Qweight = 3;
+                else if (response.weight_scale == '3_3_scale'){
+                    if (response[`mcq_${i}_d`] == null) {
+                        break;
+                    }
+                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                        Qweight = 3;
+                    }
+                    else if (response[`mcq_${i}`] === 'Moderately Agree') {
+                        Qweight = 2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Slightly Agree') {
+                        Qweight = 1;
+                    }
+                    else if (response[`mcq_${i}`] === 'Strongly Disagree') {
+                        Qweight = -3;
+                    }
+                    else if (response[`mcq_${i}`] === 'Moderately Disagree') {
+                        Qweight = -2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Slightly Disagree') {
+                        Qweight = -1;
+                    }
+                    else {
+                        Qweight = 0;
+                    }
                 }
-                else if (response[`mcq_${i}`] === 'Moderately Agree') {
-                    Qweight = 2;
+                else if (response.weight_scale == '2_2_scale'){
+                    if (response[`mcq_${i}_d`] == null) {
+                        break;
+                    }
+                    if (response[`mcq_${i}`] === 'Strongly Agree') {
+                        Qweight = 2;
+                    }
+                    else if (response[`mcq_${i}`] === 'Agree') {
+                        Qweight = 1;
+                    }
+                    else if (response[`mcq_${i}`] === 'Disagree') {
+                        Qweight = -1;
+                    }
+                    else if (response[`mcq_${i}`] === 'Strongly Disagree') {
+                        Qweight = -2;
+                    }
+                    else {
+                        Qweight = 0;
+                    }
                 }
-                else if (response[`mcq_${i}`] === 'Slightly Agree') {
-                    Qweight = 1;
-                }
-                else if (response[`mcq_${i}`] === 'Strongly Disagree') {
-                    Qweight = -3;
-                }
-                else if (response[`mcq_${i}`] === 'Moderately Disagree') {
-                    Qweight = -2;
-                }
-                else if (response[`mcq_${i}`] === 'Slightly Disagree') {
-                    Qweight = -1;
-                }
-                else {
-                    Qweight = 0;
-                }
+                console.log('weight after evaluation: ', Qweight);
+
+                const question = {
+                    description: response[`mcq_${i}_d`],
+                    survey: response.survey_id,
+                    session: response.session_name,
+                    respondent: `${response.first_name}_${response.last_name}`,
+                    response: response[`mcq_${i}`],
+                    weight: Qweight
+                };
+
+                parsedData.questions.push(question);
+
+                parsedData.question_respondent.push({
+                    question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d`]}`,
+                    survey: response.survey_id,
+                    session: response.session_name,
+                    respondent: `${response.first_name}_${response.last_name}`
+                });
             }
-            else if (response.weight_scale == '2_2_scale'){
-                if (response[`mcq_${i}_d`] == null) {
-                    break;
-                }
-                if (response[`mcq_${i}`] === 'Strongly Agree') {
-                    Qweight = 2;
-                }
-                else if (response[`mcq_${i}`] === 'Agree') {
-                    Qweight = 1;
-                }
-                else if (response[`mcq_${i}`] === 'Disagree') {
-                    Qweight = -1;
-                }
-                else if (response[`mcq_${i}`] === 'Strongly Disagree') {
-                    Qweight = -2;
-                }
-                else {
-                    Qweight = 0;
-                }
-            }
-            console.log('weight after evaluation: ', Qweight);
-
-            const question = {
-                description: response[`mcq_${i}_d`],
-                survey: response.survey_id,
-                session: response.session_name,
-                respondent: `${response.first_name}_${response.last_name}`,
-                response: response[`mcq_${i}`],
-                weight: Qweight
-            };
-
-            parsedData.questions.push(question);
-
-            parsedData.question_respondent.push({
-                question: `${response[`mcq_${i}`]}_${response[`mcq_${i}_d`]}`,
-                survey: response.survey_id,
-                session: response.session_name,
-                respondent: `${response.first_name}_${response.last_name}`
-            });
         }
 
         for (let i = 1; i <= 10; i++) {
